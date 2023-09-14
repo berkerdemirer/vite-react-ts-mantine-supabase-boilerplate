@@ -10,6 +10,7 @@ import { MantineProvider } from "@mantine/core";
 import React from "react";
 import AuthenticatedRoute from "@/components/AuthenticatedRoute";
 import Header from "@/components/Header/Header";
+import "./i18n/i18n";
 
 interface RouteCommon {
   loader?: LoaderFunction;
