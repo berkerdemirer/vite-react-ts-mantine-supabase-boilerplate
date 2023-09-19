@@ -1,16 +1,17 @@
 import {
   ActionFunction,
-  createBrowserRouter,
+  BrowserRouter,
   LoaderFunction,
-  RouterProvider,
+  Route,
+  Routes,
 } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Auth0Provider } from "@auth0/auth0-react";
 import { MantineProvider } from "@mantine/core";
 import React from "react";
 import AuthenticatedRoute from "@/components/AuthenticatedRoute";
 import Header from "@/components/Header/Header";
-import "./i18n/i18n";
+import { NothingFoundBackground } from "@/components/NothingFoundBackground/NothingFoundBackground";
+import { Auth0ProviderWithNavigate } from "@/components/Auth0ProviderWithNavigate";
 
 interface RouteCommon {
   loader?: LoaderFunction;
@@ -33,7 +34,7 @@ interface Pages {
 const App = () => {
   const queryClient = new QueryClient();
   const pages: Pages = import.meta.glob("./pages/**/*.tsx", { eager: true });
-  const authenticatedPages = new Set(["secure"]);
+  const authenticatedPages = new Set([""]);
   const routes: IRoute[] = [];
 
   for (const path of Object.keys(pages)) {
@@ -64,29 +65,34 @@ const App = () => {
       : () => <Element />;
   };
 
-  const router = createBrowserRouter(
-    routes.map(({ Element, ErrorBoundary, isAuthenticated, ...rest }) => ({
-      ...rest,
-      element: wrapElement(Element, !!isAuthenticated)(),
-      ...(ErrorBoundary && { errorElement: <ErrorBoundary /> }),
-    })),
-  );
+  routes.push({
+    path: "*",
+    Element: NothingFoundBackground,
+    isAuthenticated: false,
+  });
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Auth0Provider
-        domain={import.meta.env.VITE_AUTH0_DOMAIN}
-        clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
-        onRedirectCallback={(appState) =>
-          (window.location.href = appState?.returnTo || "/")
-        }
-      >
-        <MantineProvider withGlobalStyles withNormalizeCSS>
-          <Header links={[{ link: "test", label: "asdas" }]} />
-          <RouterProvider router={router} />
-        </MantineProvider>
-      </Auth0Provider>
-    </QueryClientProvider>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <Auth0ProviderWithNavigate>
+          <MantineProvider withGlobalStyles withNormalizeCSS>
+            <Header links={[{ link: "test", label: "asdas" }]} />
+            <Routes>
+              {routes.map(
+                ({ path, Element, ErrorBoundary, isAuthenticated }) => (
+                  <Route
+                    key={path}
+                    path={path}
+                    element={wrapElement(Element, !!isAuthenticated)()}
+                    {...(ErrorBoundary && { errorElement: <ErrorBoundary /> })}
+                  />
+                ),
+              )}
+            </Routes>
+          </MantineProvider>
+        </Auth0ProviderWithNavigate>
+      </QueryClientProvider>
+    </BrowserRouter>
   );
 };
 

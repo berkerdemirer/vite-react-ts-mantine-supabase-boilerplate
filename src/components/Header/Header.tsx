@@ -10,10 +10,12 @@ import {
   Transition,
 } from "@mantine/core";
 import { useStyles } from "@/components/Header/Header.styles";
+import { LanguagePicker } from "@/components/LanguagePicker/LanguagePicker";
 
 interface HeaderSearchProps {
   links: { link: string; label: string }[];
 }
+
 const Header: FC<HeaderSearchProps> = ({ links }) => {
   const [opened, { toggle, close }] = useDisclosure(false);
   const [active, setActive] = useState(links[0].link);
@@ -42,8 +44,8 @@ const Header: FC<HeaderSearchProps> = ({ links }) => {
         <div>logo</div>
         <Group spacing={5} className={classes.links}>
           {items}
+          <LanguagePicker />
         </Group>
-
         <Burger
           opened={opened}
           onClick={toggle}

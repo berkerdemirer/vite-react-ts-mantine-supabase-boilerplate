@@ -1,13 +1,35 @@
-import i18next from "i18next";
+import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import HttpApi from "i18next-http-backend";
+import LanguageDetector from "i18next-browser-languagedetector";
+import Backend from "i18next-locize-backend";
+import LastUsed from "locize-lastused";
 
-export const defaultNS = "ns1";
+const isProduction = import.meta.env.PROD;
 
-i18next.use(initReactI18next).use(HttpApi).init({
-  debug: true,
-  fallbackLng: "en",
-  defaultNS,
-});
+const locizeOptions = {
+  projectId: import.meta.env.VITE_LOCIZE_PROJECTID as string,
+  apiKey: import.meta.env.VITE_LOCIZE_APIKEY as string,
+  referenceLng: import.meta.env.VITE_LOCIZE_REFLNG as string,
+  version: import.meta.env.VITE_LOCIZE_VERSION as string,
+};
 
-export default i18next;
+if (!isProduction) {
+  i18n.use(LastUsed);
+}
+
+i18n
+  .use(Backend)
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    debug: true,
+    fallbackLng: "en",
+    interpolation: {
+      escapeValue: false,
+    },
+    backend: locizeOptions,
+    locizeLastUsed: locizeOptions,
+    saveMissing: !isProduction,
+  });
+
+export default i18n;
