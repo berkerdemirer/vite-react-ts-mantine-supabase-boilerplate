@@ -1,37 +1,36 @@
 import React, { FC, useState } from "react";
-import { useStyles } from "@/components/LanguagePicker/LanguagePicker.styles";
-import { Group, Menu, UnstyledButton, Text } from "@mantine/core";
+import classes from "./LanguagePicker.module.css";
+import { Group, Menu, UnstyledButton } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
-import { EEFlag, GBFlag } from "mantine-flagpack";
+import { CircleFlag } from "react-circle-flags";
 
 interface LanguagePickerProps {}
 
 export const LanguagePicker: FC<LanguagePickerProps> = () => {
   const { i18n } = useTranslation();
   const [opened, setOpened] = useState(false);
-  const { classes } = useStyles({ opened });
   const [selected, setSelected] = useState("en");
   const items = [
     <Menu.Item
-      icon={<GBFlag w={16} radius="xl" />}
+      leftSection={<CircleFlag className={classes.flag} countryCode="gb" />}
       onClick={() => {
         setSelected("en");
         i18n.changeLanguage("en");
       }}
       key={"en"}
     >
-      <Text>EN</Text>
+      EN
     </Menu.Item>,
     <Menu.Item
-      icon={<EEFlag w={16} radius="xl" />}
+      leftSection={<CircleFlag className={classes.flag} countryCode="ee" />}
       onClick={() => {
-        setSelected("et");
+        setSelected("ee");
         i18n.changeLanguage("et-EE");
       }}
       key={"et-ee"}
     >
-      <Text>EE</Text>
+      EE
     </Menu.Item>,
   ];
 
@@ -40,16 +39,19 @@ export const LanguagePicker: FC<LanguagePickerProps> = () => {
       onOpen={() => setOpened(true)}
       onClose={() => setOpened(false)}
       radius="md"
-      width={100}
+      width="target"
       withinPortal
     >
       <Menu.Target>
-        <UnstyledButton className={classes.control}>
-          <Group spacing="xs">
+        <UnstyledButton
+          className={classes.control}
+          data-expanded={opened || undefined}
+        >
+          <Group gap="xs">
             {selected === "en" ? (
-              <GBFlag w={16} radius="xl" />
+              <CircleFlag className={classes.flag} countryCode="gb" />
             ) : (
-              <EEFlag w={16} radius="xl" />
+              <CircleFlag className={classes.flag} countryCode="ee" />
             )}
           </Group>
           <IconChevronDown size="1rem" className={classes.icon} stroke={1.5} />

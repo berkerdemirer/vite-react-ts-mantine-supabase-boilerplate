@@ -1,3 +1,4 @@
+import "@mantine/core/styles.css";
 import {
   ActionFunction,
   BrowserRouter,
@@ -6,7 +7,6 @@ import {
   Routes,
 } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { MantineProvider } from "@mantine/core";
 import React from "react";
 import AuthenticatedRoute from "@/components/AuthenticatedRoute";
 import Header from "@/components/Header/Header";
@@ -34,7 +34,7 @@ interface Pages {
 const App = () => {
   const queryClient = new QueryClient();
   const pages: Pages = import.meta.glob("./pages/**/*.tsx", { eager: true });
-  const authenticatedPages = new Set([""]);
+  const authenticatedPages = new Set(["properties/create"]);
   const routes: IRoute[] = [];
 
   for (const path of Object.keys(pages)) {
@@ -75,21 +75,17 @@ const App = () => {
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <Auth0ProviderWithNavigate>
-          <MantineProvider withGlobalStyles withNormalizeCSS>
-            <Header links={[{ link: "test", label: "asdas" }]} />
-            <Routes>
-              {routes.map(
-                ({ path, Element, ErrorBoundary, isAuthenticated }) => (
-                  <Route
-                    key={path}
-                    path={path}
-                    element={wrapElement(Element, !!isAuthenticated)()}
-                    {...(ErrorBoundary && { errorElement: <ErrorBoundary /> })}
-                  />
-                ),
-              )}
-            </Routes>
-          </MantineProvider>
+          <Header links={[{ link: "/test", label: "Menu Item" }]} />
+          <Routes>
+            {routes.map(({ path, Element, ErrorBoundary, isAuthenticated }) => (
+              <Route
+                key={path}
+                path={path}
+                element={wrapElement(Element, !!isAuthenticated)()}
+                {...(ErrorBoundary && { errorElement: <ErrorBoundary /> })}
+              />
+            ))}
+          </Routes>
         </Auth0ProviderWithNavigate>
       </QueryClientProvider>
     </BrowserRouter>

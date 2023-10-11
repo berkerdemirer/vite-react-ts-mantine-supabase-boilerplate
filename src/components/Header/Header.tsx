@@ -1,67 +1,80 @@
 import React, { FC, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import {
+  Box,
   Burger,
-  Container,
+  Button,
+  Divider,
+  Drawer,
   Group,
-  Header as HeaderMenu,
-  Paper,
   rem,
-  Transition,
+  ScrollArea,
 } from "@mantine/core";
-import { useStyles } from "@/components/Header/Header.styles";
+import classes from "./Header.module.css";
 import { LanguagePicker } from "@/components/LanguagePicker/LanguagePicker";
+import { Link } from "react-router-dom";
 
 interface HeaderSearchProps {
   links: { link: string; label: string }[];
 }
 
 const Header: FC<HeaderSearchProps> = ({ links }) => {
-  const [opened, { toggle, close }] = useDisclosure(false);
+  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
+    useDisclosure(false);
   const [active, setActive] = useState(links[0].link);
-  const { classes, cx } = useStyles();
 
   const items = links.map((link) => (
-    <a
+    <Link
+      to={link.link}
       key={link.label}
-      href={link.link}
-      className={cx(classes.link, {
-        [classes.linkActive]: active === link.link,
-      })}
-      onClick={(event) => {
-        event.preventDefault();
+      className={classes.link}
+      onClick={() => {
         setActive(link.link);
         close();
       }}
+      data-active={active === link.link || undefined}
     >
       {link.label}
-    </a>
+    </Link>
   ));
 
   return (
-    <HeaderMenu height={rem(60)} mb={24} className={classes.root}>
-      <Container className={classes.header}>
-        <div>logo</div>
-        <Group spacing={5} className={classes.links}>
-          {items}
-          <LanguagePicker />
-        </Group>
-        <Burger
-          opened={opened}
-          onClick={toggle}
-          className={classes.burger}
-          size="sm"
-        />
+    <Box>
+      <header className={classes.header}>
+        <Group justify="space-between" h="100%">
+          <div>logo</div>
+          <Group h="100%" gap={0} visibleFrom="sm">
+            {items}
+            <LanguagePicker />
+          </Group>
 
-        <Transition transition="pop-top-right" duration={200} mounted={opened}>
-          {(styles) => (
-            <Paper className={classes.dropdown} withBorder style={styles}>
-              {items}
-            </Paper>
-          )}
-        </Transition>
-      </Container>
-    </HeaderMenu>
+          <Burger
+            opened={drawerOpened}
+            onClick={toggleDrawer}
+            hiddenFrom="sm"
+          />
+        </Group>
+      </header>
+      <Drawer
+        opened={drawerOpened}
+        onClose={closeDrawer}
+        size="100%"
+        padding="md"
+        title="Navigation"
+        hiddenFrom="sm"
+        zIndex={1000000}
+      >
+        <ScrollArea h={`calc(100vh - ${rem(80)})`} mx="-md">
+          <Divider my="sm" />
+          {items}
+          <Divider my="sm" />
+          <Group justify="center" grow pb="xl" px="md">
+            <Button variant="default">Log in</Button>
+            <Button>Sign up</Button>
+          </Group>
+        </ScrollArea>
+      </Drawer>
+    </Box>
   );
 };
 
