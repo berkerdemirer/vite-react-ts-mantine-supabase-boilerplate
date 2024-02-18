@@ -6,12 +6,10 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
-import AuthenticatedRoute from "@/components/AuthenticatedRoute";
-import Header from "@/components/Header/Header";
-import { NothingFoundBackground } from "@/components/NothingFoundBackground/NothingFoundBackground";
-import { Auth0ProviderWithNavigate } from "@/components/Auth0ProviderWithNavigate";
+import Header from "@/common/components/Header/Header";
+import { NothingFoundBackground } from "@/common/components/NothingFoundBackground/NothingFoundBackground";
+import AuthenticatedRoute from "@/common/components/Auth/AuthenticatedRoute";
 
 interface RouteCommon {
   loader?: LoaderFunction;
@@ -32,14 +30,17 @@ interface Pages {
 }
 
 const App = () => {
-  const queryClient = new QueryClient();
   const pages: Pages = import.meta.glob("./pages/**/*.tsx", { eager: true });
-  const authenticatedPages = new Set(["properties/create"]);
+  const authenticatedPages = new Set(["posts/create"]);
   const routes: IRoute[] = [];
 
   for (const path of Object.keys(pages)) {
     const fileName = path.match(/\.\/pages\/(.*)\.tsx$/)?.[1];
     if (!fileName) {
+      continue;
+    }
+
+    if (fileName.split("/").some((part) => part.startsWith("_"))) {
       continue;
     }
 
@@ -73,21 +74,17 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <Auth0ProviderWithNavigate>
-          <Header links={[{ link: "/test", label: "Menu Item" }]} />
-          <Routes>
-            {routes.map(({ path, Element, ErrorBoundary, isAuthenticated }) => (
-              <Route
-                key={path}
-                path={path}
-                element={wrapElement(Element, !!isAuthenticated)()}
-                {...(ErrorBoundary && { errorElement: <ErrorBoundary /> })}
-              />
-            ))}
-          </Routes>
-        </Auth0ProviderWithNavigate>
-      </QueryClientProvider>
+      <Header links={[{ link: "/test", label: "Menu Item" }]} />
+      <Routes>
+        {routes.map(({ path, Element, ErrorBoundary, isAuthenticated }) => (
+          <Route
+            key={path}
+            path={path}
+            element={wrapElement(Element, !!isAuthenticated)()}
+            {...(ErrorBoundary && { errorElement: <ErrorBoundary /> })}
+          />
+        ))}
+      </Routes>
     </BrowserRouter>
   );
 };

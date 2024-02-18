@@ -11,8 +11,8 @@ import {
   ScrollArea,
 } from "@mantine/core";
 import classes from "./Header.module.css";
-import { LanguagePicker } from "@/components/LanguagePicker/LanguagePicker";
 import { Link } from "react-router-dom";
+import { LanguagePicker } from "@/common/components/LanguagePicker/LanguagePicker";
 
 interface HeaderSearchProps {
   links: { link: string; label: string }[];
@@ -30,7 +30,6 @@ const Header: FC<HeaderSearchProps> = ({ links }) => {
       className={classes.link}
       onClick={() => {
         setActive(link.link);
-        close();
       }}
       data-active={active === link.link || undefined}
     >
