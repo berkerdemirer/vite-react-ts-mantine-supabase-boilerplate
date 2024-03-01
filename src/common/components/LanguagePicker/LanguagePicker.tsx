@@ -3,8 +3,8 @@ import classes from "./LanguagePicker.module.css";
 import { Group, Menu, UnstyledButton } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
-import { CircleFlag } from "react-circle-flags";
 import { useLocalStorage } from "@mantine/hooks";
+import { EEFlag, GBFlag } from "mantine-flagpack";
 
 interface LanguagePickerProps {}
 
@@ -24,7 +24,7 @@ export const LanguagePicker: FC<LanguagePickerProps> = () => {
 
   const items = [
     <Menu.Item
-      leftSection={<CircleFlag className={classes.flag} countryCode="gb" />}
+      leftSection={<GBFlag className={classes.flag} />}
       onClick={() => {
         setDefaultLanguage("en-US");
         setSelected("en-US");
@@ -35,7 +35,7 @@ export const LanguagePicker: FC<LanguagePickerProps> = () => {
       EN
     </Menu.Item>,
     <Menu.Item
-      leftSection={<CircleFlag className={classes.flag} countryCode="ee" />}
+      leftSection={<EEFlag className={classes.flag} />}
       onClick={() => {
         setDefaultLanguage("et-EE");
         setSelected("et-EE");
@@ -62,9 +62,9 @@ export const LanguagePicker: FC<LanguagePickerProps> = () => {
         >
           <Group gap="xs">
             {selected === "en-US" ? (
-              <CircleFlag className={classes.flag} countryCode="gb" />
+              <GBFlag className={classes.flag} />
             ) : (
-              <CircleFlag className={classes.flag} countryCode="ee" />
+              <EEFlag className={classes.flag} />
             )}
           </Group>
           <IconChevronDown size="1rem" className={classes.icon} stroke={1.5} />

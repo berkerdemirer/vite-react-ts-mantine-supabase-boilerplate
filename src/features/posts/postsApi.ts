@@ -2,8 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Post } from "./postsTypes";
 
 // Mock endpoint URL
-const BASE_URL = "https://myapi.com/posts";
-
+const BASE_URL = "https://jsonplaceholder.typicode.com/posts";
 export const postsApi = createApi({
   reducerPath: "postsApi",
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),

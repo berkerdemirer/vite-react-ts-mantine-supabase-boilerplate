@@ -1,15 +1,15 @@
 import "@mantine/core/styles.css";
-import {
-  ActionFunction,
-  BrowserRouter,
-  LoaderFunction,
-  Route,
-  Routes,
-} from "react-router-dom";
 import React from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  ActionFunction,
+  LoaderFunction,
+} from "react-router-dom";
 import Header from "@/common/components/Header/Header";
-import { NothingFoundBackground } from "@/common/components/NothingFoundBackground/NothingFoundBackground";
 import AuthenticatedRoute from "@/common/components/Auth/AuthenticatedRoute";
+import { NothingFoundBackground } from "@/common/components/NothingFoundBackground/NothingFoundBackground";
 
 interface RouteCommon {
   loader?: LoaderFunction;
