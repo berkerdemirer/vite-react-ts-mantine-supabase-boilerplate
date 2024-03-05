@@ -7,6 +7,7 @@ export const postsApi = createApi({
   reducerPath: "postsApi",
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   endpoints: (builder) => ({
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
     fetchPosts: builder.query<Post[], void>({
       query: () => "",
     }),

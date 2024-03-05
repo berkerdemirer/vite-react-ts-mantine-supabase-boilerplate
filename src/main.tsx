@@ -7,14 +7,19 @@ import { Provider } from "react-redux";
 import { store } from "@/store/store";
 import App from "@/App";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <MantineProvider>
-        <Suspense fallback={<LoadingOverlay visible={true} />}>
-          <App />
-        </Suspense>
-      </MantineProvider>
-    </Provider>
-  </React.StrictMode>,
-);
+const rootElement = document.getElementById("root");
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
+      <Provider store={store}>
+        <MantineProvider>
+          <Suspense fallback={<LoadingOverlay visible={true} />}>
+            <App />
+          </Suspense>
+        </MantineProvider>
+      </Provider>
+    </React.StrictMode>,
+  );
+} else {
+  console.error("Failed to find the root element");
+}

@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, FC } from "react";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "@/common/utils/supabaseClient";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 
-const AuthenticatedRoute: React.FC<{ element: React.ReactElement }> = ({
+const AuthenticatedRoute: FC<{ element: React.ReactElement }> = ({
   element,
 }) => {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    void supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
     });
 
@@ -20,7 +20,9 @@ const AuthenticatedRoute: React.FC<{ element: React.ReactElement }> = ({
       setSession(session);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   if (!session) {

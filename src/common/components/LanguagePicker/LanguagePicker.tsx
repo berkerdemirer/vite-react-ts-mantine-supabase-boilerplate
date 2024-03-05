@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import classes from "./LanguagePicker.module.css";
 import { Group, Menu, UnstyledButton } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
@@ -6,9 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useLocalStorage } from "@mantine/hooks";
 import { EEFlag, GBFlag } from "mantine-flagpack";
 
-interface LanguagePickerProps {}
-
-export const LanguagePicker: FC<LanguagePickerProps> = () => {
+export const LanguagePicker: FC = () => {
   const { i18n } = useTranslation();
   const [defaultLanguage, setDefaultLanguage] = useLocalStorage({
     key: "language",
@@ -28,7 +26,7 @@ export const LanguagePicker: FC<LanguagePickerProps> = () => {
       onClick={() => {
         setDefaultLanguage("en-US");
         setSelected("en-US");
-        i18n.changeLanguage("en");
+        void i18n.changeLanguage("en");
       }}
       key={"en"}
     >
@@ -39,7 +37,7 @@ export const LanguagePicker: FC<LanguagePickerProps> = () => {
       onClick={() => {
         setDefaultLanguage("et-EE");
         setSelected("et-EE");
-        i18n.changeLanguage("et-EE");
+        void i18n.changeLanguage("et-EE");
       }}
       key={"et-ee"}
     >
@@ -49,8 +47,12 @@ export const LanguagePicker: FC<LanguagePickerProps> = () => {
 
   return (
     <Menu
-      onOpen={() => setOpened(true)}
-      onClose={() => setOpened(false)}
+      onOpen={() => {
+        setOpened(true);
+      }}
+      onClose={() => {
+        setOpened(false);
+      }}
       radius="md"
       width="target"
       withinPortal

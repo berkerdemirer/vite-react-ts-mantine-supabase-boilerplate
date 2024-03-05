@@ -17,7 +17,7 @@ if (!isProduction) {
   i18n.use(LastUsed);
 }
 
-i18n
+void i18n
   .use(Backend)
   .use(LanguageDetector)
   .use(initReactI18next)

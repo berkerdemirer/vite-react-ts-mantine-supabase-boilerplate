@@ -23,11 +23,12 @@ interface IRoute extends RouteCommon {
   isAuthenticated?: boolean;
 }
 
-interface Pages {
-  [key: string]: {
+type Pages = Record<
+  string,
+  {
     default: React.ComponentType;
-  } & RouteCommon;
-}
+  } & RouteCommon
+>;
 
 const App = () => {
   const pages: Pages = import.meta.glob("./pages/**/*.tsx", { eager: true });
@@ -51,9 +52,9 @@ const App = () => {
     routes.push({
       path: fileName === "index" ? "/" : `/${normalizedPathName.toLowerCase()}`,
       Element: pages[path].default,
-      loader: pages[path]?.loader as LoaderFunction | undefined,
-      action: pages[path]?.action as ActionFunction | undefined,
-      ErrorBoundary: pages[path]?.ErrorBoundary,
+      loader: pages[path].loader,
+      action: pages[path].action,
+      ErrorBoundary: pages[path].ErrorBoundary,
       isAuthenticated: authenticatedPages.has(fileName),
     });
   }
