@@ -1,49 +1,41 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import classes from "./LanguagePicker.module.css";
-import { Group, Menu, UnstyledButton } from "@mantine/core";
+import { Flex, Menu, UnstyledButton } from "@mantine/core";
 import { IconChevronDown } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
-import { useLocalStorage } from "@mantine/hooks";
 import { EEFlag, GBFlag } from "mantine-flagpack";
+import { i18nInstance, localeConfigurations } from "@/common/i18n";
+
+const mapCountryFlag = (language: string) => {
+  if (language === "en") {
+    return <GBFlag className={classes.flag} />;
+  } else if (language === "et") {
+    return <EEFlag className={classes.flag} />;
+  }
+};
 
 export const LanguagePicker: FC = () => {
-  const { i18n } = useTranslation();
-  const [defaultLanguage, setDefaultLanguage] = useLocalStorage({
-    key: "language",
-  });
+  const {
+    i18n: { changeLanguage, resolvedLanguage },
+  } = useTranslation("project", { i18n: i18nInstance });
   const [opened, setOpened] = useState(false);
-  const [selected, setSelected] = useState<string>();
+  const items = useMemo(() => {
+    return Object.entries(localeConfigurations).map(([key, value]) => (
+      <Menu.Item
+        leftSection={mapCountryFlag(key)}
+        onClick={() => {
+          void (async () => {
+            await changeLanguage(key);
 
-  useEffect(() => {
-    if (defaultLanguage) {
-      setSelected(defaultLanguage);
-    }
-  }, [defaultLanguage]);
-
-  const items = [
-    <Menu.Item
-      leftSection={<GBFlag className={classes.flag} />}
-      onClick={() => {
-        setDefaultLanguage("en-US");
-        setSelected("en-US");
-        void i18n.changeLanguage("en");
-      }}
-      key={"en"}
-    >
-      EN
-    </Menu.Item>,
-    <Menu.Item
-      leftSection={<EEFlag className={classes.flag} />}
-      onClick={() => {
-        setDefaultLanguage("et-EE");
-        setSelected("et-EE");
-        void i18n.changeLanguage("et-EE");
-      }}
-      key={"et-ee"}
-    >
-      EE
-    </Menu.Item>,
-  ];
+            window.location.reload();
+          })();
+        }}
+        key={key}
+      >
+        {value.label}
+      </Menu.Item>
+    ));
+  }, [changeLanguage]);
 
   return (
     <Menu
@@ -62,13 +54,10 @@ export const LanguagePicker: FC = () => {
           className={classes.control}
           data-expanded={opened || undefined}
         >
-          <Group gap="xs">
-            {selected === "en-US" ? (
-              <GBFlag className={classes.flag} />
-            ) : (
-              <EEFlag className={classes.flag} />
-            )}
-          </Group>
+          <Flex gap="xs" align="center">
+            {mapCountryFlag(resolvedLanguage ?? "en")}
+            {resolvedLanguage?.substring(0, 2).toLocaleUpperCase()}
+          </Flex>
           <IconChevronDown size="1rem" className={classes.icon} stroke={1.5} />
         </UnstyledButton>
       </Menu.Target>

@@ -8,10 +8,7 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "test": "vitest",
-    "downloadEn": "locize download --project-id=596dc0ad-dac9-48af-8088-6413160596b4 --language=en --ver=latest --clean=true --path=./src/@types/locales",
-    "interface": "i18next-resources-for-ts interface -i ./src/@types/locales -o ./src/@types/resources.d.ts",
-    "update-interface": "npm run downloadEn && npm run interface && rm -rf ./src/@types/locales"
+    "test": "vitest"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -29,8 +26,7 @@
     "dayjs": "^1.11.10",
     "i18next": "^23.10.0",
     "i18next-browser-languagedetector": "^7.2.0",
-    "i18next-locize-backend": "^6.4.1",
-    "locize-lastused": "^3.4.0",
+    "i18next-intervalplural-postprocessor": "^3.0.0",
     "mantine-flagpack": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

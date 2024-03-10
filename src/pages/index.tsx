@@ -1,9 +1,11 @@
-import { useTranslation } from "react-i18next";
+import { TransButton } from "@/common/i18n/trans/button";
 
 const Home = () => {
-  const { t } = useTranslation();
-
-  return <div>{t("common.hello", { defaultValue: "hello" })}</div>;
+  return (
+    <div>
+      <TransButton i18nKey="test" />
+    </div>
+  );
 };
 
 export default Home;
